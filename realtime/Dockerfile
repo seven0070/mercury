@@ -19,5 +19,5 @@ ENV PATH=/home/appuser/.local/bin:$PATH
 COPY . .
 
 EXPOSE 8002
-HEALTHCHECK CMD curl --fail http://localhost:8002/health || exit 1
+HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')" || exit 1
 CMD ["uvicorn", "monitor:app", "--host", "0.0.0.0", "--port", "8002"]

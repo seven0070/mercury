@@ -1,4 +1,4 @@
-from crewai_tools import BaseTool
+from crewai.tools.base_tool import BaseTool
 from components.hermes3d import Hermes3D
 
 class Hermes3DTool(BaseTool):
