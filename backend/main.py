@@ -1,5 +1,6 @@
 import os
 import sys
+import logging
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
