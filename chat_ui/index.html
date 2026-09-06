@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mercury Chat</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; max-width: 900px; }
+        #chatbox { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; }
+        .user { text-align: right; color: blue; }
+        .assistant { text-align: left; color: green; }
+        #alerts { border: 1px solid orange; padding: 0.5rem; margin-top: 1rem; max-height: 200px; overflow-y: auto; }
+        input[type="text"] { width: 80%; padding: 0.5rem; }
+        button { padding: 0.5rem 1rem; }
+    </style>
+</head>
+<body>
+    <h1>Mercury – AI Office</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Ask me something..." />
+    <button onclick="sendMessage()">Send</button>
+    <div id="alerts"></div>
+    <script src="script.js"></script>
+</body>
+</html>

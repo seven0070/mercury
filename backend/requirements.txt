@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+crewai
+crewai-tools
+openai
+requests
+python-dotenv
+websockets
+sqlalchemy
+psycopg2-binary
+structlog
+prometheus-fastapi-instrumentator

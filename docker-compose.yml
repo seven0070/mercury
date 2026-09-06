@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: mercury
+      POSTGRES_PASSWORD: mercury_password
+      POSTGRES_DB: mercury_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - mercury-net
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SURFSENSE_API_URL=${SURFSENSE_API_URL}
+      - SURFSENSE_WORKSPACE_ID=${SURFSENSE_WORKSPACE_ID}
+      - SURFSENSE_API_KEY=${SURFSENSE_API_KEY}
+      - HERMES3D_ENABLED=${HERMES3D_ENABLED}
+      - HERMES3D_OFFICE_URL=${HERMES3D_OFFICE_URL}
+      - GHOST_PEPPER_TRANSCRIPT_DIR=${GHOST_PEPPER_TRANSCRIPT_DIR}
+      - DATABASE_URL=postgresql://mercury:mercury_password@postgres:5432/mercury_db
+      - MERCURY_API_KEY=${MERCURY_API_KEY}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+    depends_on:
+      - postgres
+    networks:
+      - mercury-net
+
+  pi_middleware:
+    build: ./pi_middleware
+    ports:
+      - "8001:8001"
+    environment:
+      - MERCURY_EXECUTE_URL=http://backend:8000/execute
+      - PI_API_KEY=${PI_API_KEY}
+      - MERCURY_API_KEY=${MERCURY_API_KEY}
+      - PI_MODEL=${PI_MODEL:-gpt-4o-mini}
+    depends_on:
+      - backend
+    networks:
+      - mercury-net
+
+  realtime:
+    build: ./realtime
+    ports:
+      - "8002:8002"
+    environment:
+      - SURFSENSE_API_URL=${SURFSENSE_API_URL}
+      - SURFSENSE_WORKSPACE_ID=${SURFSENSE_WORKSPACE_ID}
+      - SURFSENSE_API_KEY=${SURFSENSE_API_KEY}
+      - GHOST_PEPPER_TRANSCRIPT_DIR=${GHOST_PEPPER_TRANSCRIPT_DIR}
+      - HERMES3D_LIVE_ENABLED=${HERMES3D_LIVE_ENABLED:-false}
+      - HERMES3D_GATEWAY_URL=${HERMES3D_GATEWAY_URL:-ws://localhost:18789}
+    networks:
+      - mercury-net
+
+  chat_ui:
+    build: ./chat_ui
+    ports:
+      - "3000:80"
+    networks:
+      - mercury-net
+
+networks:
+  mercury-net:
+    driver: bridge
+
+volumes:
+  pgdata:
